@@ -103,8 +103,8 @@ class RecurrentPPOAgent(Agent):
             self.model = RecurrentPPO("MlpLstmPolicy",
                                       self.env,
                                       verbose=0,
-                                      n_steps=30*90*20,
-                                      batch_size=16,
+                                      n_steps=4096, #30*90*20,
+                                      batch_size=4096, #16 #changed
                                       ent_coef=0.05,
                                       policy_kwargs=policy_kwargs)
             del self.env
@@ -544,22 +544,23 @@ Add your dictionary of RewardFunctions here using RewTerms
 def gen_reward_manager():
     reward_functions = {
         'target_height_reward': RewTerm(func=base_height_l2, weight=0.0, params={'target_height': -4, 'obj_name': 'player'}),
-        'danger_zone_reward': RewTerm(func=danger_zone_reward, weight=0.5),
-        'damage_interaction_reward': RewTerm(func=damage_interaction_reward, weight=1.0),
-        'head_to_middle_reward': RewTerm(func=head_to_middle_reward, weight=0.01),
-        #'head_to_opponent': RewTerm(func=head_to_opponent, weight=0.05),
-        'penalize_attack_reward': RewTerm(func=in_state_reward, weight=-0.04, params={'desired_state': AttackState}),
-        'holding_more_than_3_keys': RewTerm(func=holding_more_than_3_keys, weight=-0.01),
+        'danger_zone_reward': RewTerm(func=danger_zone_reward, weight=2.0),
+        'damage_interaction_reward': RewTerm(func=damage_interaction_reward, weight=2.0),
+        'head_to_middle_reward': RewTerm(func=head_to_middle_reward, weight=0.05),
+        'head_to_opponent': RewTerm(func=head_to_opponent, weight=1.0),
+        'penalize_attack_reward': RewTerm(func=in_state_reward, weight=0.0, params={'desired_state': AttackState}),
+        'holding_more_than_3_keys': RewTerm(func=holding_more_than_3_keys, weight=-1.0),
         #'taunt_reward': RewTerm(func=in_state_reward, weight=0.2, params={'desired_state': TauntState}),
     }
     signal_subscriptions = {
         'on_win_reward': ('win_signal', RewTerm(func=on_win_reward, weight=50)),
-        'on_knockout_reward': ('knockout_signal', RewTerm(func=on_knockout_reward, weight=8)),
-        'on_combo_reward': ('hit_during_stun', RewTerm(func=on_combo_reward, weight=5)),
-        'on_equip_reward': ('weapon_equip_signal', RewTerm(func=on_equip_reward, weight=10)),
-        'on_drop_reward': ('weapon_drop_signal', RewTerm(func=on_drop_reward, weight=15))
+        'on_knockout_reward': ('knockout_signal', RewTerm(func=on_knockout_reward, weight=12)),
+        'on_combo_reward': ('hit_during_stun', RewTerm(func=on_combo_reward, weight=6)),
+        'on_equip_reward': ('weapon_equip_signal', RewTerm(func=on_equip_reward, weight=3)),
+        'on_drop_reward': ('weapon_drop_signal', RewTerm(func=on_drop_reward, weight=3))
     }
     return RewardManager(reward_functions, signal_subscriptions)
+
 
 # -------------------------------------------------------------------------
 # ----------------------------- MAIN FUNCTION -----------------------------
@@ -569,13 +570,13 @@ The main function runs training. You can change configurations such as the Agent
 '''
 if __name__ == '__main__':
     # Create agent
-    my_agent = CustomAgent(sb3_class=PPO, extractor=MLPExtractor)
+    #my_agent = CustomAgent(sb3_class=PPO, extractor=MLPExtractor)
 
     # Start here if you want to train from scratch. e.g:
     #my_agent = RecurrentPPOAgent()
 
     # Start here if you want to train from a specific timestep. e.g:
-    my_agent = RecurrentPPOAgent(file_path='checkpoints/experiment_1/rl_model_21476_steps.zip')
+    my_agent = RecurrentPPOAgent(file_path='checkpoints/moh_2/rl_model_4096_steps.zip')
 
     # Reward manager
     reward_manager = gen_reward_manager()
@@ -591,8 +592,8 @@ if __name__ == '__main__':
         save_freq=100_000, # Save frequency
         max_saved=40, # Maximum number of saved models
         save_path='checkpoints', # Save path
-        run_name='experiment_2',
-        mode=SaveHandlerMode.FORCE # Save mode, FORCE or RESUME
+        run_name='moh_2',
+        mode=SaveHandlerMode.RESUME # Save mode, FORCE or RESUME
     )
 
     # Set opponent settings here:
@@ -611,3 +612,14 @@ if __name__ == '__main__':
         train_timesteps=1_000_000_000,
         train_logging=TrainLogging.PLOT
     )
+    
+    env = gym.make("CartPole-v1", render_mode="rgb_array")
+    log_dir = "/tmp/gym/"
+    os.makedirs(log_dir, exist_ok=True)
+
+# Wrap the environment: logs will be saved in log_dir/monitor.csv
+    env = Monitor(env, log_dir)
+
+# Setup the PPO Algorithm and model
+    model = PPO("MlpPolicy", env, verbose=1, learning_rate = 0.0001, n_steps = 4096, batch_size = 4096, gamma = 0.995)
+    

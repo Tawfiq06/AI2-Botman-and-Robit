@@ -1144,5 +1144,5 @@ def run_real_time_match(agent_1: UserInputAgent, agent_2: Agent, max_timesteps=3
 
     # Close environment
     env.close()
-
+    print(match_stats, "\nLUCAS did this one") #LUCAS
     return match_stats

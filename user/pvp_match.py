@@ -8,7 +8,7 @@ pygame.init()
 my_agent = UserInputAgent()
 
 #Input your file path here in SubmittedAgent if you are loading a model:
-opponent = SubmittedAgent(file_path=None)
+opponent = SubmittedAgent(file_path='checkpoints/lucas_model4/rl_model_8192_steps.zip')
 
 match_time = 99999
 

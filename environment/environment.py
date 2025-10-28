@@ -4597,7 +4597,7 @@ class DroppedWeaponSpawner(WeaponSpawner):
                     player.pickup_lock_until = wb.steps + 15  # ~0.25s at 60fps; tweak
 
 
-                    print(f"[FRAME {wb.steps}] Player {idx} dropped '{current_weapon}' spawner at {pos} (id {new_id}).")
+                    print(f"[FRAME {wb.steps}] Player {idx} dropped '{current_weapon}' spawner at {pos} (id {new_id}). LUCAS WAS HERE")
                     #kaden
                     # player loses weapon → back to Punch
                     player.weapon = "Punch"
