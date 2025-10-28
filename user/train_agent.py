@@ -369,7 +369,7 @@ class RewardMode(Enum):
 
 def damage_interaction_reward(
     env: WarehouseBrawl,
-    mode: RewardMode = RewardMode.SYMMETRIC,
+    mode: RewardMode = RewardMode.ASYMMETRIC_OFFENSIVE,
 ) -> float:
     """
     Computes the reward based on damage interactions between players.
@@ -543,10 +543,10 @@ Add your dictionary of RewardFunctions here using RewTerms
 '''
 def gen_reward_manager():
     reward_functions = {
-        #'target_height_reward': RewTerm(func=base_height_l2, weight=0.0, params={'target_height': -4, 'obj_name': 'player'}),
+        'target_height_reward': RewTerm(func=base_height_l2, weight=0.0, params={'target_height': -4, 'obj_name': 'player'}),
         'danger_zone_reward': RewTerm(func=danger_zone_reward, weight=0.5),
         'damage_interaction_reward': RewTerm(func=damage_interaction_reward, weight=1.0),
-        #'head_to_middle_reward': RewTerm(func=head_to_middle_reward, weight=0.01),
+        'head_to_middle_reward': RewTerm(func=head_to_middle_reward, weight=0.01),
         #'head_to_opponent': RewTerm(func=head_to_opponent, weight=0.05),
         'penalize_attack_reward': RewTerm(func=in_state_reward, weight=-0.04, params={'desired_state': AttackState}),
         'holding_more_than_3_keys': RewTerm(func=holding_more_than_3_keys, weight=-0.01),
@@ -575,7 +575,7 @@ if __name__ == '__main__':
     #my_agent = RecurrentPPOAgent()
 
     # Start here if you want to train from a specific timestep. e.g:
-    #my_agent = RecurrentPPOAgent(file_path='checkpoints/experiment_3/rl_model_120006_steps.zip')
+    my_agent = RecurrentPPOAgent(file_path='checkpoints/experiment_1/rl_model_21476_steps.zip')
 
     # Reward manager
     reward_manager = gen_reward_manager()
@@ -591,7 +591,7 @@ if __name__ == '__main__':
         save_freq=100_000, # Save frequency
         max_saved=40, # Maximum number of saved models
         save_path='checkpoints', # Save path
-        run_name='experiment_9',
+        run_name='experiment_2',
         mode=SaveHandlerMode.FORCE # Save mode, FORCE or RESUME
     )
 
