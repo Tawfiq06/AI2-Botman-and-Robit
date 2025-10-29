@@ -3533,6 +3533,7 @@ class Player(GameObject):
         return obs
 
     def respawn(self) -> None:
+        print("player respawned") #LUCAS
         self.body.position = self.start_position
         self.body.velocity = pymunk.Vec2d(0, 0)
         self.damage = 0
@@ -4597,7 +4598,7 @@ class DroppedWeaponSpawner(WeaponSpawner):
                     player.pickup_lock_until = wb.steps + 15  # ~0.25s at 60fps; tweak
 
 
-                    print(f"[FRAME {wb.steps}] Player {idx} dropped '{current_weapon}' spawner at {pos} (id {new_id}). LUCAS WAS HERE")
+                    #print(f"[FRAME {wb.steps}] Player {idx} dropped '{current_weapon}' spawner at {pos} (id {new_id}). LUCAS WAS HERE")
                     #kaden
                     # player loses weapon → back to Punch
                     player.weapon = "Punch"

@@ -543,13 +543,13 @@ Add your dictionary of RewardFunctions here using RewTerms
 '''
 def gen_reward_manager():
     reward_functions = {
-        'target_height_reward': RewTerm(func=base_height_l2, weight=0.0, params={'target_height': -4, 'obj_name': 'player'}),
-        'danger_zone_reward': RewTerm(func=danger_zone_reward, weight=2.0),
+        'target_height_reward': RewTerm(func=base_height_l2, weight=0.5, params={'target_height': -4, 'obj_name': 'player'}),
+        'danger_zone_reward': RewTerm(func=danger_zone_reward, weight=2.2),
         'damage_interaction_reward': RewTerm(func=damage_interaction_reward, weight=2.0),
         'head_to_middle_reward': RewTerm(func=head_to_middle_reward, weight=0.05),
-        'head_to_opponent': RewTerm(func=head_to_opponent, weight=1.0),
+        'head_to_opponent': RewTerm(func=head_to_opponent, weight=1.5),
         'penalize_attack_reward': RewTerm(func=in_state_reward, weight=0.0, params={'desired_state': AttackState}),
-        'holding_more_than_3_keys': RewTerm(func=holding_more_than_3_keys, weight=-1.0),
+        'holding_more_than_3_keys': RewTerm(func=holding_more_than_3_keys, weight=-2.5),
         #'taunt_reward': RewTerm(func=in_state_reward, weight=0.2, params={'desired_state': TauntState}),
     }
     signal_subscriptions = {
@@ -570,13 +570,14 @@ The main function runs training. You can change configurations such as the Agent
 '''
 if __name__ == '__main__':
     # Create agent
-    #my_agent = CustomAgent(sb3_class=PPO, extractor=MLPExtractor)
+    my_agent = CustomAgent(sb3_class=PPO, extractor=MLPExtractor)
 
     # Start here if you want to train from scratch. e.g:
     #my_agent = RecurrentPPOAgent()
 
     # Start here if you want to train from a specific timestep. e.g:
-    my_agent = RecurrentPPOAgent(file_path='checkpoints/moh_2/rl_model_12288_steps.zip')
+    #my_agent = RecurrentPPOAgent(file_path='checkpoints/moh_2/rl_model_12288_steps.zip')
+    #my_agent = CustomAgent(file_path='checkpoints/moh_3/rl_model_56700_steps.zip')
 
     # Reward manager
     reward_manager = gen_reward_manager()
@@ -592,8 +593,8 @@ if __name__ == '__main__':
         save_freq=100_000, # Save frequency
         max_saved=40, # Maximum number of saved models
         save_path='checkpoints', # Save path
-        run_name='moh_2',
-        mode=SaveHandlerMode.RESUME # Save mode, FORCE or RESUME
+        run_name='ali1',
+        mode=SaveHandlerMode.FORCE # Save mode, FORCE or RESUMEq
     )
 
     # Set opponent settings here:
