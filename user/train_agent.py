@@ -576,7 +576,7 @@ if __name__ == '__main__':
     #my_agent = RecurrentPPOAgent()
 
     # Start here if you want to train from a specific timestep. e.g:
-    my_agent = RecurrentPPOAgent(file_path='checkpoints/moh_2/rl_model_4096_steps.zip')
+    my_agent = RecurrentPPOAgent(file_path='checkpoints/moh_2/rl_model_12288_steps.zip')
 
     # Reward manager
     reward_manager = gen_reward_manager()
@@ -604,15 +604,6 @@ if __name__ == '__main__':
                 }
     opponent_cfg = OpponentsCfg(opponents=opponent_specification)
 
-    train(my_agent,
-        reward_manager,
-        save_handler,
-        opponent_cfg,
-        CameraResolution.LOW,
-        train_timesteps=1_000_000_000,
-        train_logging=TrainLogging.PLOT
-    )
-    
     env = gym.make("CartPole-v1", render_mode="rgb_array")
     log_dir = "/tmp/gym/"
     os.makedirs(log_dir, exist_ok=True)
@@ -622,4 +613,13 @@ if __name__ == '__main__':
 
 # Setup the PPO Algorithm and model
     model = PPO("MlpPolicy", env, verbose=1, learning_rate = 0.0001, n_steps = 4096, batch_size = 4096, gamma = 0.995)
+    
+    train(my_agent,
+        reward_manager,
+        save_handler,
+        opponent_cfg,
+        CameraResolution.LOW,
+        train_timesteps=1_000_000_000,
+        train_logging=TrainLogging.PLOT
+    )
     

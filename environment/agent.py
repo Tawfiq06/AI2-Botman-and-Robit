@@ -690,7 +690,7 @@ def run_match(agent_1: Agent | partial,
     )
 
     del env
-
+    print('\nRESULTS ARE: ', result, "LUCAS DID THIS ONE\n")
     return match_stats
 
 
@@ -1144,5 +1144,5 @@ def run_real_time_match(agent_1: UserInputAgent, agent_2: Agent, max_timesteps=3
 
     # Close environment
     env.close()
-    print(match_stats, "\nLUCAS did this one") #LUCAS
+    print(result, "\nLUCAS did this one") #LUCAS
     return match_stats
